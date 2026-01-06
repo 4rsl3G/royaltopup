@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><%= title %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.6.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/public/assets/css/app.css">
+  <link href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
+</head>
+<body style="font-family:Inter,system-ui,sans-serif">
+  <div id="topLoading" class="hidden" style="position:fixed;top:0;left:0;right:0;height:3px;background:#0f172a;z-index:999"></div>
+
+  <div class="admin-shell" data-admin-shell="1">
+    <aside class="sidebar">
+      <div class="top">
+        <div class="brand"><i class="ri-shield-star-line"></i> Admin Panel</div>
+        <div class="muted text-sm mt-1">Path: /<%= adminPath %></div>
+      </div>
+      <div class="menu">
+        <div class="cap">Manage</div>
+        <a class="item" href="/<%= adminPath %>/p/dashboard" data-spa="1"><i class="ri-dashboard-2-line"></i> Dashboard</a>
+        <a class="item" href="/<%= adminPath %>/p/orders" data-spa="1"><i class="ri-inbox-2-line"></i> Orders</a>
+        <a class="item" href="/<%= adminPath %>/p/products" data-spa="1"><i class="ri-box-3-line"></i> Products</a>
+
+        <div class="cap mt-2">System</div>
+        <a class="item" href="/<%= adminPath %>/p/whatsapp" data-spa="1"><i class="ri-whatsapp-line"></i> WhatsApp</a>
+        <a class="item" href="/<%= adminPath %>/p/logs" data-spa="1"><i class="ri-terminal-box-line"></i> Live Logs</a>
+        <a class="item" href="/<%= adminPath %>/p/settings" data-spa="1"><i class="ri-settings-3-line"></i> Settings</a>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <div class="topbar">
+        <div class="muted">Super Premium • No Gradient • Real-time WS</div>
+        <form data-ajax="1" method="post" action="/<%= adminPath %>/api/logout">
+          <button class="btn" type="submit"><i class="ri-logout-box-r-line"></i> Logout</button>
+        </form>
+      </div>
+      <div class="page">
+        <div id="app" class="fx-in"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/build/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+  <script src="/public/assets/js/ws-client.js"></script>
+  <script src="/public/assets/js/spa.js"></script>
+
+  <script>
+    // initial tab auto-load
+    (function(){
+      const tab = "<%= tab %>";
+      const adminPath = "<%= adminPath %>";
+      const map = {
+        login: `/${adminPath}/p/login`,
+        dashboard: `/${adminPath}/p/dashboard`,
+        orders: `/${adminPath}/p/orders`,
+        products: `/${adminPath}/p/products`,
+        settings: `/${adminPath}/p/settings`,
+        whatsapp: `/${adminPath}/p/whatsapp`,
+        logs: `/${adminPath}/p/logs`
+      };
+      const url = map[tab] || map.login;
+      window.SPA?.load ? window.SPA.load(url,{push:false}) : null;
+    })();
+  </script>
+</body>
+</html>
