@@ -1,0 +1,43 @@
+<div class="flex items-start justify-between gap-4">
+  <div>
+    <div class="h1">Dashboard</div>
+    <div class="muted mt-1">Real-time via WebSocket. Tanpa polling UI.</div>
+  </div>
+  <div class="status neutral">
+    <span class="dot" id="dashDot"></span>
+    <span id="dashLive">LIVE • real-time</span>
+  </div>
+</div>
+
+<div class="mt-5 grid md:grid-cols-6 gap-3" data-dashboard="1">
+  <div class="kpi"><div class="t">Total Orders</div><div class="v" id="kTotal"><%= stats.totalOrders %></div></div>
+  <div class="kpi"><div class="t">Paid Orders</div><div class="v" id="kPaid"><%= stats.paidOrders %></div></div>
+  <div class="kpi"><div class="t">Paid Waiting</div><div class="v" id="kWait"><%= stats.waitingPaid %></div></div>
+  <div class="kpi"><div class="t">Processing</div><div class="v" id="kProc"><%= stats.processing %></div></div>
+  <div class="kpi"><div class="t">Done</div><div class="v" id="kDone"><%= stats.doneOrders %></div></div>
+  <div class="kpi"><div class="t">Rejected</div><div class="v" id="kRej"><%= stats.rejected %></div></div>
+</div>
+
+<div class="mt-5 card">
+  <div class="hd">Last Orders</div>
+  <div class="bd">
+    <div id="gridDash"></div>
+  </div>
+</div>
+
+<script>
+  window.renderDashGrid = function(rows){
+    const el = document.getElementById("gridDash");
+    if (!el) return;
+    el.innerHTML = '';
+    new gridjs.Grid({
+      columns: ["Order ID","Produk","Qty","Total","Pay","Fulfill"],
+      data: rows,
+      pagination: { limit: 10 }
+    }).render(el);
+  };
+
+  window.renderDashGrid(<%- JSON.stringify(lastOrders.map(o=>[
+    o.order_id, o.product_name, o.qty, o.gross_amount, o.pay_status, o.fulfill_status
+  ])) %>);
+</script>
