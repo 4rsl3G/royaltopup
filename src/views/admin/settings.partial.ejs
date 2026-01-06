@@ -1,0 +1,48 @@
+<div class="flex items-start justify-between gap-4">
+  <div>
+    <div class="h1">Settings</div>
+    <div class="muted mt-1">API URL, API Key (encrypted), Admin WA & Admin Path.</div>
+  </div>
+</div>
+
+<div class="mt-5 grid lg:grid-cols-2 gap-4">
+  <div class="card">
+    <div class="hd">Gateway</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/<%= adminPath %>/api/settings/save">
+        <div class="grid gap-3">
+          <div>
+            <div class="label">API URL</div>
+            <input class="input" name="api_url" value="<%= api_url %>" placeholder="https://atlantich2h.com">
+          </div>
+          <div>
+            <div class="label">API KEY (disimpan encrypted)</div>
+            <input class="input" name="api_key" placeholder="isi jika ingin update">
+            <div class="help">Key tidak ditampilkan kembali demi keamanan.</div>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="ri-save-3-line"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd">Admin</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/<%= adminPath %>/api/settings/save">
+        <div class="grid gap-3">
+          <div>
+            <div class="label">Admin WhatsApp</div>
+            <input class="input" name="admin_wa" value="<%= admin_wa %>" placeholder="08xxxxxxxxxx">
+            <div class="help">Dinormalisasi ke 62 otomatis.</div>
+          </div>
+          <div>
+            <div class="label">Admin Path (anti bocor)</div>
+            <input class="input" name="admin_path" placeholder="mis: panel-x9k">
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="ri-save-3-line"></i> Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
