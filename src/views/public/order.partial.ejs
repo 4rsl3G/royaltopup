@@ -1,0 +1,66 @@
+<div class="grid md:grid-cols-2 gap-4">
+  <div class="card">
+    <div class="hd">Buat Order</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/api/public/order">
+        <div class="grid gap-3">
+          <div>
+            <div class="label">Produk</div>
+            <select class="input" name="product_id">
+              <% products.forEach(p=>{ %>
+                <option value="<%= p.id %>"><%= p.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div>
+            <div class="label">Pilih Nominal</div>
+            <select class="input" name="tier_id">
+              <% tiers.forEach(t=>{ %>
+                <option value="<%= t.id %>"><%= t.label %> — Rp <%= Number(t.price).toLocaleString('id-ID') %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <div class="label">Game ID</div>
+              <input class="input" name="game_id" placeholder="ID Game" required>
+            </div>
+            <div>
+              <div class="label">Nickname</div>
+              <input class="input" name="nickname" placeholder="Nickname" required>
+            </div>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <div class="label">WhatsApp</div>
+              <input class="input" name="whatsapp" placeholder="08xxxxxxxxxx" required>
+              <div class="help">Nomor otomatis dinormalisasi (08 → 62).</div>
+            </div>
+            <div>
+              <div class="label">Email (opsional)</div>
+              <input class="input" name="email" placeholder="email@domain.com">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="submit"><i class="ri-secure-payment-line"></i> Buat Invoice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd">Cara Pembayaran</div>
+    <div class="bd">
+      <div class="timeline">
+        <div class="step active"><div class="s">Step 1</div><div class="v">Buat invoice</div></div>
+        <div class="step"><div class="s">Step 2</div><div class="v">Scan QRIS</div></div>
+        <div class="step"><div class="s">Step 3</div><div class="v">Diproses admin</div></div>
+        <div class="step"><div class="s">Step 4</div><div class="v">Selesai</div></div>
+      </div>
+      <div class="mt-4 muted">Status invoice akan realtime tanpa refresh.</div>
+    </div>
+  </div>
+</div>
