@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import cron from 'node-cron';
 
 import { buildApp, sessionMiddleware } from './app.js';
-import { sequelize, Admin } from './models/index.js';
+import { sequelize, Admin, Product, ProductPriceTier } from './models/index.js';
 import { setSetting } from './services/settings.js';
 import { startWhatsApp } from './services/whatsapp/bot.js';
 import { attachWebSocketServer } from './services/realtime/ws.js';
@@ -41,6 +41,38 @@ async function seed(){
   await setSetting('admin_path', 'superadmin');
 
   console.log('Seed done. Admin:', user);
+
+    // seed product + tiers
+  let prod = await Product.findOne({ where:{ sku:'RD-CHIPS' } });
+  if (!prod){
+    prod = await Product.create({ sku:'RD-CHIPS', name:'Royal Dreams Chips', sort_order:1, active:true });
+  }
+
+  const tiers = [
+    ['120M', 1, 10000],
+    ['250M', 1, 20000],
+    ['350M', 1, 25000],
+    ['400M', 1, 30000],
+    ['500M', 1, 32500],
+    ['530M', 1, 35000],
+    ['750M', 1, 50000],
+    ['1B',   1, 65000],
+    ['1,53B',1, 100000],
+    ['2B',   2, 130000],
+    ['3B',   3, 195000],
+    ['4B',   4, 260000],
+    ['5B',   5, 325000],
+    ['10B',  10, 645000],
+    ['20B',  20, 1280000],
+    ['50B',  50, 3150000]
+  ];
+
+  for (const [label, qty, price] of tiers){
+    const exist = await ProductPriceTier.findOne({ where:{ product_id: prod.id, label } });
+    if (!exist){
+      await ProductPriceTier.create({ product_id: prod.id, label, qty, price });
+    }
+  }
 }
 
 async function main(){
