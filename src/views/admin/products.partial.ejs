@@ -1,0 +1,110 @@
+<div class="flex items-start justify-between gap-4">
+  <div>
+    <div class="h1">Products</div>
+    <div class="muted mt-1">CRUD produk & tier harga.</div>
+  </div>
+</div>
+
+<div class="mt-5 grid lg:grid-cols-2 gap-4">
+  <div class="card">
+    <div class="hd">Tambah Produk</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/<%= adminPath %>/api/products/create">
+        <div class="grid gap-3">
+          <div class="grid md:grid-cols-2 gap-3">
+            <div>
+              <div class="label">SKU</div>
+              <input class="input" name="sku" placeholder="RD-CHIPS" required>
+            </div>
+            <div>
+              <div class="label">Sort</div>
+              <input class="input" name="sort_order" type="number" value="0">
+            </div>
+          </div>
+          <div>
+            <div class="label">Name</div>
+            <input class="input" name="name" placeholder="Royal Dreams Chips" required>
+          </div>
+          <div>
+            <div class="label">Image URL (opsional)</div>
+            <input class="input" name="image" placeholder="https://...">
+          </div>
+          <div>
+            <div class="label">Active</div>
+            <select class="input" name="active">
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="ri-add-line"></i> Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd">Tambah Tier Harga</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/<%= adminPath %>/api/tiers/create">
+        <div class="grid gap-3">
+          <div>
+            <div class="label">Product</div>
+            <select class="input" name="product_id">
+              <% products.forEach(p=>{ %>
+                <option value="<%= p.id %>"><%= p.name %> (SKU: <%= p.sku %>)</option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div>
+              <div class="label">Label</div>
+              <input class="input" name="label" placeholder="1B" required>
+            </div>
+            <div>
+              <div class="label">Qty</div>
+              <input class="input" name="qty" type="number" placeholder="1" required>
+            </div>
+            <div>
+              <div class="label">Price</div>
+              <input class="input" name="price" type="number" placeholder="65000" required>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="ri-add-line"></i> Add Tier</button>
+        </div>
+      </form>
+      <div class="muted text-sm mt-3">Qty bisa kamu pakai untuk “koin/B”, sesuai kebutuhan.</div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5 card">
+  <div class="hd">List Produk</div>
+  <div class="bd">
+    <div id="gridProd"></div>
+  </div>
+</div>
+
+<div class="mt-5 card">
+  <div class="hd">List Tiers</div>
+  <div class="bd">
+    <div id="gridTier"></div>
+  </div>
+</div>
+
+<script>
+  new gridjs.Grid({
+    columns:["ID","SKU","Name","Active","Sort"],
+    data: <%- JSON.stringify(products.map(p=>[p.id,p.sku,p.name,p.active? '1':'0',p.sort_order])) %>,
+    search:true,
+    pagination:{ limit:10 }
+  }).render(document.getElementById('gridProd'));
+
+  const tiers = <%- JSON.stringify(tiers.map(t=>[t.id,t.product_id,t.label,t.qty,t.price])) %>;
+
+  new gridjs.Grid({
+    columns:["ID","ProductID","Label","Qty","Price"],
+    data: tiers,
+    search:true,
+    pagination:{ limit:12 }
+  }).render(document.getElementById('gridTier'));
+</script>
