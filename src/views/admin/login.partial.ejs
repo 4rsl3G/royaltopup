@@ -1,0 +1,55 @@
+<div class="grid md:grid-cols-2 gap-4">
+  <div class="card">
+    <div class="hd">Admin Login</div>
+    <div class="bd">
+      <form data-ajax="1" method="post" action="/<%= adminPath %>/api/login">
+        <div class="grid gap-3">
+          <div>
+            <div class="label">Username</div>
+            <input class="input" name="username" placeholder="admin" required>
+          </div>
+          <div>
+            <div class="label">Password</div>
+            <input class="input" type="password" name="password" placeholder="••••••••" required>
+          </div>
+          <button class="btn btn-primary" type="submit"><i class="ri-login-circle-line"></i> Login</button>
+        </div>
+      </form>
+
+      <div class="mt-5" style="border-top:1px solid var(--border); padding-top:14px">
+        <div class="label">Lupa Password?</div>
+        <div class="muted text-sm mt-1">Minta OTP via WhatsApp bot admin.</div>
+
+        <form class="mt-3" data-ajax="1" method="post" action="/<%= adminPath %>/api/reset/request">
+          <button class="btn" type="submit"><i class="ri-message-3-line"></i> Kirim OTP</button>
+        </form>
+
+        <form class="mt-3" data-ajax="1" method="post" action="/<%= adminPath %>/api/reset/confirm">
+          <div class="grid gap-3">
+            <div>
+              <div class="label">OTP</div>
+              <input class="input" name="otp" placeholder="6 digit" required>
+            </div>
+            <div>
+              <div class="label">Password Baru</div>
+              <input class="input" type="password" name="new_password" placeholder="minimal 8 karakter" required>
+            </div>
+            <button class="btn btn-primary" type="submit"><i class="ri-key-2-line"></i> Reset Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="hd">Security</div>
+    <div class="bd">
+      <div class="pill"><i class="ri-lock-2-line"></i> Admin-only (no register)</div>
+      <div class="pill mt-2"><i class="ri-shield-keyhole-line"></i> Single Admin enforced</div>
+      <div class="pill mt-2"><i class="ri-database-2-line"></i> API key encrypted in DB</div>
+      <div class="muted mt-4 text-sm">
+        Jika ada orang iseng menambah admin via DB, tetap ditolak karena sistem hanya mengizinkan <b>allowed_admin_id</b>.
+      </div>
+    </div>
+  </div>
+</div>
