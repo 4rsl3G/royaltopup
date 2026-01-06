@@ -1,0 +1,80 @@
+<div class="flex items-start justify-between gap-4">
+  <div>
+    <div class="h1">Orders</div>
+    <div class="muted mt-1">Konfirmasi manual: processing / done / rejected.</div>
+  </div>
+  <div class="pill"><i class="ri-information-line"></i> Gunakan tombol aksi di setiap order</div>
+</div>
+
+<div class="mt-5 card">
+  <div class="hd">Daftar Orders</div>
+  <div class="bd">
+    <div id="gridOrders"></div>
+  </div>
+</div>
+
+<div class="mt-5 card">
+  <div class="hd">Action Panel</div>
+  <div class="bd">
+    <div class="muted text-sm">Klik row di tabel untuk set order aktif.</div>
+    <div class="mt-3 grid md:grid-cols-3 gap-3">
+      <div>
+        <div class="label">Order ID</div>
+        <input class="input" id="actOrderId" placeholder="Klik dari tabel" readonly>
+      </div>
+      <div>
+        <div class="label">Catatan Admin</div>
+        <input class="input" id="actNote" placeholder="opsional">
+      </div>
+      <div class="flex items-end gap-2">
+        <button class="btn" id="btnProc"><i class="ri-time-line"></i> Processing</button>
+        <button class="btn btn-primary" id="btnDone"><i class="ri-check-line"></i> Done</button>
+        <button class="btn btn-danger" id="btnRej"><i class="ri-close-line"></i> Reject</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const rows = <%- JSON.stringify(orders.map(o=>[
+    o.order_id, o.product_name, o.game_id||'', o.nickname||'', o.whatsapp_raw||'',
+    o.gross_amount, o.pay_status, o.fulfill_status
+  ])) %>;
+
+  const grid = new gridjs.Grid({
+    columns: ["Order ID","Produk","Game ID","Nickname","WA","Total","Pay","Fulfill"],
+    data: rows,
+    pagination: { limit: 12 },
+    search: true
+  }).render(document.getElementById('gridOrders'));
+
+  // select row
+  document.getElementById('gridOrders').addEventListener('click', (e)=>{
+    const tr = e.target.closest('tr');
+    if (!tr) return;
+    const cells = [...tr.querySelectorAll('td')].map(td=>td.textContent);
+    const orderId = cells?.[0];
+    if (orderId && orderId !== 'Order ID') {
+      $('#actOrderId').val(orderId);
+    }
+  });
+
+  async function setStatus(action){
+    const adminPath = location.pathname.split('/')[1];
+    const orderId = $('#actOrderId').val();
+    const note = $('#actNote').val();
+    if (!orderId) return SPA.toast('error','Pilih order dulu');
+
+    const resp = await $.ajax({
+      url:`/${adminPath}/api/order/${orderId}/status`,
+      method:'POST',
+      data:{ action, note }
+    });
+    if (!resp.ok) return SPA.toast('error', resp.message || 'Gagal');
+    if (resp.toast) SPA.toast(resp.toast.type, resp.toast.message);
+  }
+
+  $('#btnProc').on('click', ()=>setStatus('processing'));
+  $('#btnDone').on('click', ()=>setStatus('done'));
+  $('#btnRej').on('click', ()=>setStatus('rejected'));
+</script>
